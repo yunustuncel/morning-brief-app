@@ -140,6 +140,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
                 var list = document.getElementById('mb-todo-list');
                 if (!list) return;
                 list.innerHTML = '';
+                var empty = document.getElementById('mb-todo-empty');
+                var visible = loadTodos().filter(function(t) { return !t.done || t.date === today; });
+                if (empty) empty.style.display = visible.length === 0 ? 'block' : 'none';
                 var n = 1;
                 loadTodos().forEach(function(todo) {
                     if (todo.done && todo.date !== today) return;
@@ -189,14 +192,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
                     '#mb-todo-section .mb-todo-input{flex:1;background:#272729;border:1px solid #3A3A38;border-radius:6px;padding:6px 12px;color:#E5E4DC;font-size:13px;font-family:-apple-system,sans-serif;outline:none}' +
                     '#mb-todo-section .mb-todo-input::placeholder{color:#555550}' +
                     '#mb-todo-section .mb-todo-input:focus{border-color:#555550}' +
-                    '#mb-todo-section .mb-add-btn{flex-shrink:0;width:114px;padding:4px 0;text-align:center;background:#2D7A4F;border:1px solid #2D7A4F;border-radius:6px;color:#fff;font-size:11px;font-family:-apple-system,sans-serif;cursor:pointer}' +
-                    '#mb-todo-section .mb-add-btn:hover{background:#256640;border-color:#256640}' +
+                    '#mb-todo-section .mb-add-btn{flex-shrink:0;width:114px;padding:4px 0;text-align:center;background:#fff;border:1px solid #C8C7BE;border-radius:6px;color:#17171A;font-size:11px;font-family:-apple-system,sans-serif;cursor:pointer;box-sizing:border-box;line-height:1}' +
+                    '#mb-todo-section .mb-add-btn:hover{background:#f0f0ee;border-color:#8A8A82}' +
                     '#mb-todo-section #mb-todo-list{list-style:none;display:flex;flex-direction:column;gap:14px}' +
+                    '#mb-todo-section .mb-todo-empty{font-size:12px;color:#555550;margin-top:6px}' +
                     '#mb-todo-section .mb-todo-item{display:flex;align-items:flex-start;gap:12px}' +
                     '#mb-todo-section .mb-todo-num{font-size:11px;color:#555550;min-width:16px;padding-top:3px;flex-shrink:0}' +
                     '#mb-todo-section .mb-todo-text{flex:1;font-size:13px;color:#E5E4DC;line-height:1.5;padding-top:2px}' +
                     '#mb-todo-section .mb-done .mb-todo-text{color:#555550;text-decoration:line-through}' +
-                    '#mb-todo-section .mb-btn{flex-shrink:0;width:114px;padding:4px 0;text-align:center;border-radius:6px;font-size:11px;font-family:-apple-system,sans-serif;cursor:pointer}' +
+                    '#mb-todo-section .mb-btn{flex-shrink:0;width:114px;padding:4px 0;text-align:center;border-radius:6px;font-size:11px;font-family:-apple-system,sans-serif;cursor:pointer;box-sizing:border-box;line-height:1}' +
                     '#mb-todo-section .mb-btn-done{background:#2D7A4F;border:1px solid #2D7A4F;color:#fff}' +
                     '#mb-todo-section .mb-btn-done:hover{background:#256640;border-color:#256640}' +
                     '#mb-todo-section .mb-btn-remove{background:transparent;border:1px solid #555550;color:#8A8A82}' +
@@ -209,7 +213,21 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
                 section.className = 'section';
                 section.id = 'mb-todo-section';
 
-                // Input row sits above the heading
+                var heading = document.createElement('div');
+                heading.className = 'section-heading';
+                heading.textContent = "Today's tasks";
+                section.appendChild(heading);
+
+                var emptyMsg = document.createElement('p');
+                emptyMsg.className = 'mb-todo-empty';
+                emptyMsg.id = 'mb-todo-empty';
+                emptyMsg.textContent = 'No tasks yet — add one below.';
+                section.appendChild(emptyMsg);
+
+                var list = document.createElement('ul');
+                list.id = 'mb-todo-list';
+                section.appendChild(list);
+
                 var row = document.createElement('div');
                 row.className = 'mb-todo-row';
 
@@ -224,15 +242,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
                 addBtn.textContent = 'Add';
                 row.appendChild(addBtn);
                 section.appendChild(row);
-
-                var heading = document.createElement('div');
-                heading.className = 'section-heading';
-                heading.textContent = "Today's tasks";
-                section.appendChild(heading);
-
-                var list = document.createElement('ul');
-                list.id = 'mb-todo-list';
-                section.appendChild(list);
 
                 function addTodo() {
                     var text = input.value.trim();
