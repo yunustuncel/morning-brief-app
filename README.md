@@ -9,7 +9,7 @@ A native macOS app that shows your personalized morning brief — calendar, emai
 - **Today's focus** — prep for your main meeting of the day, and what to wrap up before tomorrow
 - **Needs attention** — items with real cost if ignored today (someone blocked on you, a window closing)
 - **Resolved** — threads that closed since yesterday, worth a glance
-- **Acknowledge buttons** — click to mark items done; state persists across app restarts
+- **Acknowledge buttons** — green by default; click once to mark done (turns grey, locked — no revert); state persists across app restarts and carries unacknowledged items forward into the next day's brief
 
 ---
 
@@ -85,7 +85,11 @@ Claude Code (8 AM, weekdays)
 
 Morning Brief.app
   └─ Opens: ~/Documents/MorningBrief/today.html in a WKWebView window
-  └─ Saves: acknowledge state to localStorage (keyed by date)
+  └─ Writes: items-YYYY-MM-DD.json  (all items for carryover tracking)
+  └─ Writes: acks-YYYY-MM-DD.json   (acknowledged IDs, keyed by date)
+
+Next morning, Claude reads the last 3 weekdays' JSON pairs and prepends
+any unacknowledged items to today's Needs Attention section.
 ```
 
 The app shows a placeholder screen if no brief has been generated yet for today.
