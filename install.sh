@@ -203,7 +203,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
                 var st = document.createElement('style');
                 st.id = 'mb-todo-styles';
                 st.textContent =
-                    '#mb-todo-section .mb-todo-row{display:flex;gap:10px;margin-bottom:14px}' +
+                    '#mb-todo-section .mb-todo-row{display:flex;gap:10px;margin-top:14px;margin-bottom:18px}' +
                     '#mb-todo-section .mb-todo-input{flex:1;background:#272729;border:1px solid #3A3A38;border-radius:6px;padding:6px 12px;color:#E5E4DC;font-size:13px;font-family:-apple-system,sans-serif;outline:none}' +
                     '#mb-todo-section .mb-todo-input::placeholder{color:#555550}' +
                     '#mb-todo-section .mb-todo-input:focus{border-color:#555550}' +
@@ -233,16 +233,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
                 heading.textContent = "Today's tasks";
                 section.appendChild(heading);
 
-                var emptyMsg = document.createElement('p');
-                emptyMsg.className = 'mb-todo-empty';
-                emptyMsg.id = 'mb-todo-empty';
-                emptyMsg.textContent = 'No tasks yet — add one below.';
-                section.appendChild(emptyMsg);
-
-                var list = document.createElement('ul');
-                list.id = 'mb-todo-list';
-                section.appendChild(list);
-
                 var row = document.createElement('div');
                 row.className = 'mb-todo-row';
 
@@ -257,6 +247,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
                 addBtn.textContent = 'Add';
                 row.appendChild(addBtn);
                 section.appendChild(row);
+
+                var emptyMsg = document.createElement('p');
+                emptyMsg.className = 'mb-todo-empty';
+                emptyMsg.id = 'mb-todo-empty';
+                emptyMsg.textContent = 'No tasks yet.';
+                section.appendChild(emptyMsg);
+
+                var list = document.createElement('ul');
+                list.id = 'mb-todo-list';
+                section.appendChild(list);
 
                 function addTodo() {
                     var text = input.value.trim();
