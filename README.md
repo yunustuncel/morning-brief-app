@@ -2,7 +2,6 @@
 
 A native macOS app that shows your personalized morning brief — calendar, email highlights, Slack — as a styled dark-theme HTML page. Generated automatically each weekday at 8 AM by Claude Code.
 
-![Morning Brief — dark theme with terrain header, today's focus, needs attention, and green acknowledge buttons](screenshot.png)
 
 ## What you get
 
