@@ -207,7 +207,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
                     '#mb-todo-section .mb-todo-input{flex:1;background:#272729;border:1px solid #3A3A38;border-radius:6px;padding:6px 12px;color:#E5E4DC;font-size:13px;font-family:-apple-system,sans-serif;outline:none}' +
                     '#mb-todo-section .mb-todo-input::placeholder{color:#555550}' +
                     '#mb-todo-section .mb-todo-input:focus{border-color:#555550}' +
-                    '#mb-todo-section .mb-add-btn{flex-shrink:0;width:114px;padding:4px 0;text-align:center;background:#fff;border:1px solid #C8C7BE;border-radius:6px;color:#17171A;font-size:11px;font-family:-apple-system,sans-serif;cursor:pointer;box-sizing:border-box;line-height:1}' +
+                    '#mb-todo-section .mb-add-btn{flex-shrink:0;padding:4px 12px;background:#fff;border:1px solid #C8C7BE;border-radius:6px;color:#17171A;font-family:-apple-system,sans-serif;cursor:pointer;box-sizing:border-box;-webkit-appearance:none;appearance:none}' +
                     '#mb-todo-section .mb-add-btn:hover{background:#f0f0ee;border-color:#8A8A82}' +
                     '#mb-todo-section #mb-todo-list{list-style:none;display:flex;flex-direction:column;gap:14px}' +
                     '#mb-todo-section .mb-todo-empty{font-size:12px;color:#555550;margin-top:6px}' +
@@ -215,7 +215,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
                     '#mb-todo-section .mb-todo-num{font-size:11px;color:#555550;min-width:16px;padding-top:3px;flex-shrink:0}' +
                     '#mb-todo-section .mb-todo-text{flex:1;font-size:13px;color:#E5E4DC;line-height:1.5;padding-top:2px}' +
                     '#mb-todo-section .mb-done .mb-todo-text{color:#555550;text-decoration:line-through}' +
-                    '#mb-todo-section .mb-btn{flex-shrink:0;width:114px;padding:4px 0;text-align:center;border-radius:6px;font-size:11px;font-family:-apple-system,sans-serif;cursor:pointer;box-sizing:border-box;line-height:1;-webkit-appearance:none;appearance:none}' +
+                    '#mb-todo-section .mb-btn{flex-shrink:0;padding:4px 12px;text-align:center;border-radius:6px;font-family:-apple-system,sans-serif;cursor:pointer;box-sizing:border-box;-webkit-appearance:none;appearance:none}' +
                     '#mb-todo-section .mb-btn-done{background:#2D7A4F;border:1px solid #2D7A4F;color:#fff}' +
                     '#mb-todo-section .mb-btn-done:hover{background:#256640;border-color:#256640}' +
                     '#mb-todo-section .mb-btn-remove{background:transparent;border:1px solid #555550;color:#8A8A82}' +
