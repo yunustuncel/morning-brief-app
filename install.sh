@@ -103,9 +103,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
             if (!document.getElementById('mb-ack-override')) {
                 var s = document.createElement('style');
                 s.id = 'mb-ack-override';
-                s.textContent = '.item-ack{width:auto!important;padding:4px 12px!important}';
+                s.textContent =
+                    '.item-ack{width:auto!important;padding:4px 12px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important}' +
+                    '.mb-btn,.mb-add-btn{display:inline-flex!important;align-items:center!important;justify-content:center!important}';
                 document.head.appendChild(s);
             }
+            setTimeout(function() {
+                var ack = document.querySelector('.item-ack');
+                var st = document.getElementById('mb-ack-override');
+                if (ack && st) {
+                    var h = ack.offsetHeight + 'px';
+                    st.textContent += '.mb-btn,.mb-add-btn{height:' + h + '!important}';
+                }
+            }, 100);
             var today = new Date().toISOString().slice(0, 10);
             var lsKey = 'morning-brief-acks-' + today;
             var saved = JSON.parse(localStorage.getItem(lsKey) || '{}');
@@ -194,7 +204,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
 
                     var removeBtn = document.createElement('button');
                     removeBtn.className = 'mb-btn mb-btn-remove';
-                    removeBtn.textContent = 'Remove';
+                    removeBtn.setAttribute('aria-label', 'Remove');
+                    removeBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/><path d="M9 6V4h6v2"/></svg>';
                     removeBtn.onclick = (function(id) { return function() {
                         saveTodos(loadTodos().filter(function(t) { return t.id !== id; }));
                         render();
@@ -224,7 +235,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
                     '#mb-todo-section .mb-btn{flex-shrink:0;padding:4px 12px;text-align:center;border-radius:6px;font-family:-apple-system,sans-serif;cursor:pointer;box-sizing:border-box;-webkit-appearance:none;appearance:none}' +
                     '#mb-todo-section .mb-btn-done{background:#2D7A4F;border:1px solid #2D7A4F;color:#fff}' +
                     '#mb-todo-section .mb-btn-done:hover{background:#256640;border-color:#256640}' +
-                    '#mb-todo-section .mb-btn-remove{background:transparent;border:1px solid #555550;color:#8A8A82}' +
+                    '#mb-todo-section .mb-btn-remove{background:transparent;border:1px solid #555550;color:#8A8A82;padding:4px 8px!important}' +
                     '#mb-todo-section .mb-btn-remove:hover{border-color:#8A8A82;color:#E5E4DC}';
                 document.head.appendChild(st);
             }
