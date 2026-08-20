@@ -215,7 +215,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
                     '#mb-todo-section .mb-todo-num{font-size:11px;color:#555550;min-width:16px;padding-top:3px;flex-shrink:0}' +
                     '#mb-todo-section .mb-todo-text{flex:1;font-size:13px;color:#E5E4DC;line-height:1.5;padding-top:2px}' +
                     '#mb-todo-section .mb-done .mb-todo-text{color:#555550;text-decoration:line-through}' +
-                    '#mb-todo-section .mb-btn{flex-shrink:0;width:114px;padding:4px 0;text-align:center;border-radius:6px;font-size:11px;font-family:-apple-system,sans-serif;cursor:pointer;box-sizing:border-box;line-height:1}' +
+                    '#mb-todo-section .mb-btn{flex-shrink:0;width:114px;padding:4px 0;text-align:center;border-radius:6px;font-size:11px;font-family:-apple-system,sans-serif;cursor:pointer;box-sizing:border-box;line-height:1;-webkit-appearance:none;appearance:none}' +
                     '#mb-todo-section .mb-btn-done{background:#2D7A4F;border:1px solid #2D7A4F;color:#fff}' +
                     '#mb-todo-section .mb-btn-done:hover{background:#256640;border-color:#256640}' +
                     '#mb-todo-section .mb-btn-remove{background:transparent;border:1px solid #555550;color:#8A8A82}' +
