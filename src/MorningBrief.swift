@@ -1,9 +1,47 @@
 import Cocoa
 import WebKit
 
+class AckHandler: NSObject, WKScriptMessageHandler {
+    func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard let body = message.body as? [String: Any],
+              let date = body["date"] as? String,
+              let id = body["id"] as? String,
+              let checked = body["checked"] as? Bool else { return }
+
+        let url = FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent("Documents/MorningBrief/acks-\(date).json")
+
+        var acks: [String: Bool] = [:]
+        if let data = try? Data(contentsOf: url),
+           let existing = try? JSONSerialization.jsonObject(with: data) as? [String: Bool] {
+            acks = existing
+        }
+        if checked { acks[id] = true } else { acks.removeValue(forKey: id) }
+        if let data = try? JSONSerialization.data(withJSONObject: acks) {
+            try? data.write(to: url)
+        }
+    }
+}
+
+class ItemsHandler: NSObject, WKScriptMessageHandler {
+    func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard let body = message.body as? [String: Any],
+              let date = body["date"] as? String,
+              let items = body["items"] as? [[String: String]] else { return }
+
+        let url = FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent("Documents/MorningBrief/items-\(date).json")
+        if let data = try? JSONSerialization.data(withJSONObject: items) {
+            try? data.write(to: url)
+        }
+    }
+}
+
 class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
     var window: NSWindow!
     var webView: WKWebView!
+    let ackHandler = AckHandler()
+    let itemsHandler = ItemsHandler()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         window = NSWindow(
@@ -19,6 +57,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
         window.setFrameAutosaveName("MorningBriefWindow")
 
         let cfg = WKWebViewConfiguration()
+        cfg.userContentController.add(ackHandler, name: "acks")
+        cfg.userContentController.add(itemsHandler, name: "items")
+
         webView = WKWebView(frame: window.contentView!.bounds, configuration: cfg)
         webView.autoresizingMask = [.width, .height]
         webView.appearance = NSAppearance(named: .darkAqua)
@@ -45,16 +86,35 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
         let js = """
         (function() {
             var today = new Date().toISOString().slice(0, 10);
-            var key = 'morning-brief-acks-' + today;
-            var saved = JSON.parse(localStorage.getItem(key) || '{}');
+            var lsKey = 'morning-brief-acks-' + today;
+            var saved = JSON.parse(localStorage.getItem(lsKey) || '{}');
+
+            // Restore checkbox states and wire persistence
             document.querySelectorAll('.ack-cb').forEach(function(cb) {
                 if (saved[cb.id]) cb.checked = true;
                 cb.addEventListener('change', function() {
-                    var state = JSON.parse(localStorage.getItem(key) || '{}');
+                    var state = JSON.parse(localStorage.getItem(lsKey) || '{}');
                     state[this.id] = this.checked;
-                    localStorage.setItem(key, JSON.stringify(state));
+                    localStorage.setItem(lsKey, JSON.stringify(state));
+                    window.webkit.messageHandlers.acks.postMessage({
+                        date: today, id: this.id, checked: this.checked
+                    });
                 });
             });
+
+            // Snapshot all items for next-day carryover
+            var items = [];
+            document.querySelectorAll('.ack-cb').forEach(function(cb) {
+                var li = cb.closest('li');
+                var titleEl = li && li.querySelector('.item-title');
+                var sentenceEl = li && li.querySelector('.item-sentence');
+                items.push({
+                    id: cb.id,
+                    title: titleEl ? titleEl.textContent.trim() : '',
+                    sentence: sentenceEl ? sentenceEl.textContent.trim() : ''
+                });
+            });
+            window.webkit.messageHandlers.items.postMessage({ date: today, items: items });
         })();
         """
         webView.evaluateJavaScript(js, completionHandler: nil)
