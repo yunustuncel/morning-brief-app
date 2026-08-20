@@ -155,15 +155,21 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
                 var list = document.getElementById('mb-todo-list');
                 if (!list) return;
                 list.innerHTML = '';
+                var n = 1;
                 loadTodos().forEach(function(todo) {
                     if (todo.done && todo.date !== today) return;
                     var li = document.createElement('li');
                     li.className = 'mb-todo-item' + (todo.done ? ' mb-done' : '');
 
-                    var span = document.createElement('span');
-                    span.className = 'mb-todo-text';
-                    span.textContent = todo.text;
-                    li.appendChild(span);
+                    var numSpan = document.createElement('span');
+                    numSpan.className = 'mb-todo-num';
+                    numSpan.textContent = n++;
+                    li.appendChild(numSpan);
+
+                    var textSpan = document.createElement('span');
+                    textSpan.className = 'mb-todo-text';
+                    textSpan.textContent = todo.text;
+                    li.appendChild(textSpan);
 
                     if (!todo.done) {
                         var doneBtn = document.createElement('button');
@@ -194,20 +200,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
                 var st = document.createElement('style');
                 st.id = 'mb-todo-styles';
                 st.textContent =
-                    '#mb-todo-section .mb-todo-row{display:flex;gap:10px;margin-bottom:16px}' +
+                    '#mb-todo-section .mb-todo-row{display:flex;gap:10px;margin-bottom:14px}' +
                     '#mb-todo-section .mb-todo-input{flex:1;background:#272729;border:1px solid #3A3A38;border-radius:6px;padding:6px 12px;color:#E5E4DC;font-size:13px;font-family:-apple-system,sans-serif;outline:none}' +
                     '#mb-todo-section .mb-todo-input::placeholder{color:#555550}' +
                     '#mb-todo-section .mb-todo-input:focus{border-color:#555550}' +
-                    '#mb-todo-section .mb-add-btn{flex-shrink:0;padding:6px 16px;background:#2D7A4F;border:1px solid #2D7A4F;border-radius:6px;color:#fff;font-size:11px;font-family:-apple-system,sans-serif;cursor:pointer}' +
+                    '#mb-todo-section .mb-add-btn{flex-shrink:0;width:114px;padding:4px 0;text-align:center;background:#2D7A4F;border:1px solid #2D7A4F;border-radius:6px;color:#fff;font-size:11px;font-family:-apple-system,sans-serif;cursor:pointer}' +
                     '#mb-todo-section .mb-add-btn:hover{background:#256640;border-color:#256640}' +
-                    '#mb-todo-section #mb-todo-list{list-style:none;display:flex;flex-direction:column;gap:12px}' +
-                    '#mb-todo-section .mb-todo-item{display:flex;align-items:center;gap:10px}' +
-                    '#mb-todo-section .mb-todo-text{flex:1;font-size:13px;color:#E5E4DC;line-height:1.5}' +
+                    '#mb-todo-section #mb-todo-list{list-style:none;display:flex;flex-direction:column;gap:14px}' +
+                    '#mb-todo-section .mb-todo-item{display:flex;align-items:flex-start;gap:12px}' +
+                    '#mb-todo-section .mb-todo-num{font-size:11px;color:#555550;min-width:16px;padding-top:3px;flex-shrink:0}' +
+                    '#mb-todo-section .mb-todo-text{flex:1;font-size:13px;color:#E5E4DC;line-height:1.5;padding-top:2px}' +
                     '#mb-todo-section .mb-done .mb-todo-text{color:#555550;text-decoration:line-through}' +
-                    '#mb-todo-section .mb-btn{flex-shrink:0;padding:3px 10px;background:transparent;border:1px solid #555550;border-radius:5px;color:#8A8A82;font-size:11px;font-family:-apple-system,sans-serif;cursor:pointer}' +
-                    '#mb-todo-section .mb-btn:hover{border-color:#8A8A82;color:#E5E4DC}' +
-                    '#mb-todo-section .mb-btn-done{border-color:#2D7A4F;color:#2D7A4F}' +
-                    '#mb-todo-section .mb-btn-done:hover{background:#2D7A4F;color:#fff}';
+                    '#mb-todo-section .mb-btn{flex-shrink:0;width:114px;padding:4px 0;text-align:center;border-radius:6px;font-size:11px;font-family:-apple-system,sans-serif;cursor:pointer}' +
+                    '#mb-todo-section .mb-btn-done{background:#2D7A4F;border:1px solid #2D7A4F;color:#fff}' +
+                    '#mb-todo-section .mb-btn-done:hover{background:#256640;border-color:#256640}' +
+                    '#mb-todo-section .mb-btn-remove{background:transparent;border:1px solid #555550;color:#8A8A82}' +
+                    '#mb-todo-section .mb-btn-remove:hover{border-color:#8A8A82;color:#E5E4DC}';
                 document.head.appendChild(st);
             }
 
@@ -216,11 +224,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
                 section.className = 'section';
                 section.id = 'mb-todo-section';
 
-                var heading = document.createElement('div');
-                heading.className = 'section-heading';
-                heading.textContent = 'My to-do';
-                section.appendChild(heading);
-
+                // Input row sits above the heading
                 var row = document.createElement('div');
                 row.className = 'mb-todo-row';
 
@@ -235,6 +239,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
                 addBtn.textContent = 'Add';
                 row.appendChild(addBtn);
                 section.appendChild(row);
+
+                var heading = document.createElement('div');
+                heading.className = 'section-heading';
+                heading.textContent = "Today's tasks";
+                section.appendChild(heading);
 
                 var list = document.createElement('ul');
                 list.id = 'mb-todo-list';
