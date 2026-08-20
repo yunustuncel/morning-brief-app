@@ -105,13 +105,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
             var saved = JSON.parse(localStorage.getItem(lsKey) || '{}');
 
             document.querySelectorAll('.ack-cb').forEach(function(cb) {
-                if (saved[cb.id]) cb.checked = true;
+                if (saved[cb.id]) { cb.checked = true; cb.disabled = true; }
                 cb.addEventListener('change', function() {
+                    if (!this.checked) return;
+                    this.disabled = true;
                     var state = JSON.parse(localStorage.getItem(lsKey) || '{}');
-                    state[this.id] = this.checked;
+                    state[this.id] = true;
                     localStorage.setItem(lsKey, JSON.stringify(state));
                     window.webkit.messageHandlers.acks.postMessage({
-                        date: today, id: this.id, checked: this.checked
+                        date: today, id: this.id, checked: true
                     });
                 });
             });
