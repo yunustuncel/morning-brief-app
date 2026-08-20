@@ -85,6 +85,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         let ackJS = #"""
         (function() {
+            if (!document.getElementById('mb-ack-override')) {
+                var s = document.createElement('style');
+                s.id = 'mb-ack-override';
+                s.textContent = '.item-ack{width:auto!important;padding:4px 12px!important}';
+                document.head.appendChild(s);
+            }
             var today = new Date().toISOString().slice(0, 10);
             var lsKey = 'morning-brief-acks-' + today;
             var saved = JSON.parse(localStorage.getItem(lsKey) || '{}');
